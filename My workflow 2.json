@@ -1,0 +1,372 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -592,
+        -96
+      ],
+      "id": "5bc66fd6-3e74-498b-9b58-d7b0bff316c8",
+      "name": "Telegram Trigger",
+      "webhookId": "8203916b-7be4-4760-8476-cd8c72aba31c",
+      "credentials": {
+        "telegramApi": {
+          "id": "p1mkdy4B56IbrFDv",
+          "name": "Rereply Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "You are a highly professional AI Personal Assistant.\n\nYour personality:\n- Polite, respectful, and calm\n- Clear and concise in communication\n- Helpful and proactive\n- Never rude, never overly casual\n- Always confirm before taking important actions\n\nYour capabilities:\nYou can perform the following tasks using available tools:\n1. Send emails\n2. Read and analyze expenses\n3. Write and update expenses in Google Sheets\n4. Schedule events in calendar\n5. Set reminders and notifications\n\nBehavior rules:\n- Always understand the user's intent before acting\n- If information is missing, ask clarifying questions\n- Before executing actions like sending emails or scheduling, confirm details with the user\n- Format outputs clearly and professionally\n- Maintain user data privacy and do not expose sensitive information\n\n---\n\n### Task Handling Instructions:\n\n## 1. Email Handling\n- When asked to send an email:\n  - Ask for recipient, subject, and message if not provided\n  - Suggest improvements if needed\n  - Show final draft before sending\n  - Only send after user confirmation\n\n## 2. Expense Tracking\n- When user provides expense:\n  - Extract: amount, category, date, description\n  - Confirm extracted details\n  - Store in Google Sheets\n- When asked to analyze:\n  - Summarize total spending\n  - Categorize expenses\n  - Provide insights\n\n## 3. Google Sheets Updates\n- Always structure data properly:\n  Columns = Date | Amount | Category | Description\n- Ensure no duplicate or incorrect entries\n\n## 4. Calendar Scheduling\n- Extract:\n  - Event title\n  - Date & time\n  - Duration\n- Confirm timezone if unclear\n- Ask before scheduling if conflict may occur\n\n## 5. Reminders\n- Confirm:\n  - What to remind\n  - When\n- Send confirmation message after scheduling\n\n---\n\n### Communication Style:\n- Use phrases like:\n  - \"Sure, I’d be happy to help.\"\n  - \"Just to confirm...\"\n  - \"Here’s what I understood...\"\n- Always be structured and easy to read\n\n---\n\n### Example Behavior:\n\nUser: \"Send email to Rahul about meeting tomorrow\"\n\nAssistant:\n\"Sure, I can help with that.\nJust to confirm:\n- Recipient: Rahul\n- Subject: (not provided)\n- Message: (not provided)\n\nCould you please provide the subject and message?\"\n\n---\n\nUser: \"I spent 500 on food today\"\n\nAssistant:\n\"Got it. Here's what I understood:\n- Amount: ₹500\n- Category: Food\n- Date: Today\n\nShould I save this to your expense tracker?\"\n\n---\n\nIMPORTANT:\n- Never assume missing critical details\n- Always confirm before executing actions\n- Be reliable, accurate, and polite"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -240,
+        -144
+      ],
+      "id": "dfd39ea9-058e-4fd8-8174-285824c4f3c9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -544,
+        128
+      ],
+      "id": "d7e74b03-f8bb-40c1-8790-569018134f9e",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "C3YICWN0Up8ndPIK",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "AFtab"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        128
+      ],
+      "id": "89c77bd0-99b3-4086-820d-cde33110d9b3",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        -144
+      ],
+      "id": "cf0e1c0a-cafa-49ec-881e-46ab5c382919",
+      "name": "Send a text message",
+      "webhookId": "2c86ba90-a08a-43d5-878d-c2c755d610b1",
+      "credentials": {
+        "telegramApi": {
+          "id": "p1mkdy4B56IbrFDv",
+          "name": "Rereply Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        128
+      ],
+      "id": "bcfaebb7-c621-463c-b4aa-7830a47e6f00",
+      "name": "Send a message in Gmail",
+      "webhookId": "db73b921-3f72-4732-93f7-8d6414803ae9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "496F2ucSAkXzl4YP",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA",
+          "mode": "list",
+          "cachedResultName": "Expense Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Expense Category": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Expense_Category', ``, 'string') }}",
+            "Amount": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Amount', ``, 'string') }}",
+            "Date": "={{$now.format('dd-MM-yyyy')}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Expense Category",
+              "displayName": "Expense Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Amount",
+              "displayName": "Amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -64,
+        128
+      ],
+      "id": "f8f09b95-42e7-4a4a-a864-669df9184cb0",
+      "name": "Add Expense in Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ov30iEnOWddNxk8U",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA",
+          "mode": "list",
+          "cachedResultName": "Expense Tracker",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10Ebwet7ZkcCbo84My8WCiSN_uTfmTuvgd93GvANgFxA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        96,
+        128
+      ],
+      "id": "1e276ae9-e04a-4d18-b726-3ec3f4365cae",
+      "name": "Read Expenses from Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ov30iEnOWddNxk8U",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "aftabbiz74@gmail.com",
+          "mode": "list",
+          "cachedResultName": "aftabbiz74@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        272,
+        64
+      ],
+      "id": "8b556c98-0272-4087-8395-e1c36562726a",
+      "name": "Schedule the calender",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "HTq2njCQAXtpxkCh",
+          "name": "Google Calendar OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Expense in Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Expenses from Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule the calender": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "12e3a9e0-ee17-4118-ba75-7d06f8624766",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "1fe9ef42d7eb2dc8c2ab1dc6716112ba48a35cd5120d0ecb8afe597a778dd6f3"
+  },
+  "id": "Uxelh269wkIefDiW",
+  "tags": []
+}
