@@ -47,7 +47,7 @@ Below is the workflow architecture:
 
 ⚡ Setup Instructions
 1. Clone the Repository
-git clone 
+git clone [https://github.com/Aftab-alam09/Personal-AI-Assistant.git](url)
 cd ai-personal-assistant-n8n
 2. Setup n8n
 Install n8n locally or use cloud
