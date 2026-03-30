@@ -1,5 +1,7 @@
 # Personal-AI-Assistant
 🤖 AI Personal Assistant Automation (n8n)
+<img width="1554" height="687" alt="Screenshot 2026-03-30 121802" src="https://github.com/user-attachments/assets/5f0414d1-6997-40eb-9a65-b481f343c662" />
+
 
 An intelligent AI-powered personal assistant workflow built using n8n that automates daily tasks like email handling, expense tracking, scheduling, and reminders.
 
@@ -7,7 +9,6 @@ An intelligent AI-powered personal assistant workflow built using n8n that autom
 📧 Email Automation
 Send emails dynamically using AI
 Draft & confirm before sending
-💰 Expense Tracking
 Capture expenses from natural language
 Store data in Google Sheets
 Categorize & structure entries
@@ -83,4 +84,4 @@ Special thanks to Be10x for helping accelerate my learning in AI automation and 
 
 If you found this project useful or want to collaborate:
 
-LinkedIn: [Your Profile Link]
+LinkedIn: [www.linkedin.com/in/aftabalamprofile]
